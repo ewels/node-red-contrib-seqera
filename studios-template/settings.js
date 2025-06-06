@@ -231,6 +231,7 @@ module.exports = {
   //    {path: '/home/nol/reports/', root: "/doc/"},
   //    {path: '/home/nol/videos/',  root: "/vid/", options: {maxAge: '1d'}}
   //],
+  httpStatic: [{ path: "./", root: "/node-red-data/" }],
 
   /**
    * All static routes will be appended to httpStaticRoot
@@ -377,6 +378,7 @@ module.exports = {
     },
     page: {
       css: "/node-red-data/node-red-seqera.css",
+      scripts: "/node-red-data/welcome-tour.js",
     },
     // theme: "github-dark-default",
 

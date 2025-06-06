@@ -5,3 +5,133 @@
 #red-ui-header span.red-ui-header-logo img {
   height: 24px;
 }
+
+/* Seqera Welcome Modal Styles */
+.seqera-welcome-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(22, 15, 38, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: seqera-welcome-fade-in 0.3s ease-out;
+}
+
+.seqera-welcome-modal {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(22, 15, 38, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: seqera-welcome-slide-in 0.3s ease-out;
+}
+
+.seqera-welcome-header {
+  padding: 2rem 2rem 1rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.seqera-welcome-logo {
+  height: 32px;
+  margin-bottom: 1rem;
+}
+
+.seqera-welcome-header h2 {
+  margin: 0;
+  color: #160f26;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.seqera-welcome-content {
+  padding: 1.5rem 2rem;
+  color: #333;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.seqera-welcome-content p {
+  margin: 0 0 1rem 0;
+}
+
+.seqera-welcome-content ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.seqera-welcome-content li {
+  margin-bottom: 0.5rem;
+}
+
+.seqera-welcome-footer {
+  padding: 1rem 2rem 2rem 2rem;
+  text-align: center;
+}
+
+.seqera-welcome-button {
+  background: linear-gradient(135deg, #6c5e9d, #8a7bb8);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.seqera-welcome-button:hover {
+  background: linear-gradient(135deg, #5a4d85, #6c5e9d);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 94, 157, 0.3);
+}
+
+.seqera-welcome-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(108, 94, 157, 0.3);
+}
+
+/* Animations */
+@keyframes seqera-welcome-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes seqera-welcome-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .seqera-welcome-modal {
+    margin: 1rem;
+    width: calc(100% - 2rem);
+  }
+
+  .seqera-welcome-header,
+  .seqera-welcome-content,
+  .seqera-welcome-footer {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
