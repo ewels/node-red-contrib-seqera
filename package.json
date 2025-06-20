@@ -1,6 +1,6 @@
 {
   "name": "@seqera/node-red-seqera",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Node-RED nodes for interacting with the Seqera Platform API",
   "author": "Phil Ewels <phil.ewels@seqera.io>",
   "license": "Apache-2.0",
@@ -36,7 +36,8 @@
       "seqera-dataset-create": "nodes/dataset-create.js",
       "seqera-datalink-list": "nodes/datalink-list.js",
       "seqera-datalink-poll": "nodes/datalink-poll.js",
-      "seqera-studios-create": "nodes/studios-create.js"
+      "seqera-studios-create": "nodes/studios-create.js",
+      "seqera-studios-monitor": "nodes/studios-monitor.js"
     },
     "examples": {
       "Seqera Platform": "examples"

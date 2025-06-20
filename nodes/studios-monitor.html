@@ -1,0 +1,143 @@
+<script type="text/html" data-template-name="seqera-studios-monitor">
+  <div class="form-row">
+    <label for="node-input-seqera"><i class="icon-globe"></i> Seqera config</label>
+    <input type="text" id="node-input-seqera" data-type="seqera-config" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-studioId"><i class="fa fa-code"></i> Studio ID</label>
+    <input type="text" id="node-input-studioId" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-workspaceId"><i class="icon-tasks"></i> Workspace ID</label>
+    <input type="text" id="node-input-workspaceId" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-keepPolling" style="width: auto !important; padding-right:10px">
+      <i class="fa fa-clock-o"></i> Keep polling status
+    </label>
+    <input type="checkbox" id="node-input-keepPolling" style="margin-top: 0; display:inline-block; width:auto;" />
+  </div>
+  <div class="form-row" id="node-poll-row">
+    <label for="node-input-poll"><i class="fa fa-clock-o"></i> Poll every</label>
+    <input type="text" id="node-input-poll" style="text-align:end; width:50px !important" />
+    <select id="node-input-pollUnits" style="width:120px !important">
+      <option value="seconds">Seconds</option>
+      <option value="minutes">Minutes</option>
+      <option value="hours">Hours</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" />
+  </div>
+</script>
+
+<!-- prettier-ignore -->
+<script type="text/markdown" data-help-name="seqera-studios-monitor">
+Monitors the status of a Seqera Platform Studio session.
+
+### Inputs
+
+: studioId (string) : The ID of the Studio session to monitor. Defaults to `msg.studioId`.
+: workspaceId (string) : Override the workspace ID from the config node.
+
+### Configuration
+
+: Keep polling status (boolean) : If enabled (default), the node will poll the Studio status until it reaches a terminal state. If disabled, the node will query the status once and return immediately.
+: Poll every (string) : How frequently to poll when *Keep polling status* is enabled (default `5 seconds`). Can be configured in seconds, minutes, or hours.
+
+### Outputs
+
+1. Status updates (active Studio)
+: payload (object) : The Studio details from the API, sent on every status poll while the Studio is active (starting, running, building, or stopping).
+: studioId (string) : The Studio session ID.
+
+2. Success
+: payload (object) : The Studio details from the API, sent once when the Studio is stopped.
+: studioId (string) : The Studio session ID.
+
+3. Error
+: payload (object) : The Studio details from the API, sent once when the Studio errors or the build fails.
+: studioId (string) : The Studio session ID.
+
+### Details
+
+This node queries the Seqera Platform API for the current status of a Studio. When *Keep polling status* is enabled (default) the node will keep polling at the configured interval until the Studio reaches a terminal state (stopped, errored, buildFailed).
+
+If *Keep polling status* is disabled the node performs a single status check and outputs the result immediately.
+
+### References
+
+- [Seqera Platform API docs](https://docs.seqera.io/platform/latest/api) - information about Studio status
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("seqera-studios-monitor", {
+    category: "seqera",
+    color: "#A9A1C6",
+    inputs: 1,
+    outputs: 3,
+    icon: "icons/studios.svg",
+    align: "left",
+    paletteLabel: "Monitor studio",
+    label: function () {
+      return this.name || "Monitor studio";
+    },
+    outputLabels: ["status", "stopped", "error"],
+    defaults: {
+      name: { value: "" },
+      seqera: { value: "", type: "seqera-config" },
+      studioId: { value: "studioId", required: true },
+      studioIdType: { value: "msg" },
+      workspaceId: { value: "" },
+      workspaceIdType: { value: "str" },
+      keepPolling: { value: true },
+      poll: { value: 5 },
+      pollUnits: { value: "seconds" },
+    },
+    oneditprepare: function () {
+      function ti(id, val, type) {
+        $(id).typedInput({ default: "str", types: ["str", "msg", "flow", "global", "env", "jsonata"] });
+        $(id).typedInput("value", val);
+        $(id).typedInput("type", type);
+      }
+
+      ti("#node-input-studioId", this.studioId || "studioId", this.studioIdType || "msg");
+      ti("#node-input-workspaceId", this.workspaceId || "", this.workspaceIdType || "str");
+
+      // Poll interval
+      $("#node-input-poll").val(this.poll || 5);
+      $("#node-input-pollUnits").val(this.pollUnits || "seconds");
+
+      // Keep polling checkbox
+      const keepPolling = this.keepPolling !== undefined ? this.keepPolling : true;
+      $("#node-input-keepPolling").prop("checked", keepPolling);
+
+      function togglePollRow() {
+        if ($("#node-input-keepPolling").is(":checked")) {
+          $("#node-poll-row").show();
+        } else {
+          $("#node-poll-row").hide();
+        }
+      }
+
+      $("#node-input-keepPolling").on("change", togglePollRow);
+      togglePollRow();
+    },
+    oneditsave: function () {
+      function save(id, prop, propType) {
+        this[prop] = $(id).typedInput("value");
+        this[propType] = $(id).typedInput("type");
+      }
+      save.call(this, "#node-input-studioId", "studioId", "studioIdType");
+      save.call(this, "#node-input-workspaceId", "workspaceId", "workspaceIdType");
+
+      // Poll interval and units
+      this.poll = $("#node-input-poll").val();
+      this.pollUnits = $("#node-input-pollUnits").val();
+
+      // Keep polling state
+      this.keepPolling = $("#node-input-keepPolling").is(":checked");
+    },
+  });
+</script>
